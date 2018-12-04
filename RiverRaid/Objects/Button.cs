@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 using RiverRaid.ObjectTypes;
 
-namespace RiverRaid.Objects
+namespace RiverRaid.ObjectTypes
 {
     class Button : IEntity
     {

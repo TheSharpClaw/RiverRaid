@@ -30,6 +30,7 @@ namespace RiverRaid.Objects.Tiles
         public void Update()
         {
             Position = new Vector2(Position.X, Position.Y + Globals.tileVelocity);
+
             if (Position.Y > 192)
                 ToDestroy = true;
         }

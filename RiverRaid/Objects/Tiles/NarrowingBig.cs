@@ -12,6 +12,8 @@ namespace RiverRaid.Objects.Tiles
         public Rectangle BoundingBox { get; set; }
         public bool ToDestroy { get; private set; }
 
+        private Airplane _airplane;
+
         public IComponent Stage { get; private set; }
 
         public NarrowingBig(IComponent stage, Texture2D texture, Vector2 position)
@@ -22,6 +24,8 @@ namespace RiverRaid.Objects.Tiles
             Texture = texture;
             BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
                 (int)(Texture.Width * Globals.scaleX), (int)(0.8f * Texture.Height * Globals.scaleY));
+
+            _airplane = (Airplane)Stage.EntityList.Find(x => x is Airplane);
         }
 
         public void Draw()
@@ -32,8 +36,17 @@ namespace RiverRaid.Objects.Tiles
         public void Update()
         {
             Position = new Vector2(Position.X, Position.Y + Globals.tileVelocity);
+
             if (Position.Y > 192)
                 ToDestroy = true;
+
+            BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
+                (int)(Texture.Width * Globals.scaleX), (int)(0.8f * Texture.Height * Globals.scaleY));
+
+            if (_airplane.BoundingBox.Intersects(BoundingBox))
+            {
+                _airplane.CollisionFlag = true;
+            }
         }
     }
 }

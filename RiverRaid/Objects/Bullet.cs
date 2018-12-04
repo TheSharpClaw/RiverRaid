@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 using RiverRaid.ObjectTypes;
 
-namespace RiverRaid.Objects
+namespace RiverRaid.ObjectTypes
 {
     class Bullet : IEntity
     {
@@ -21,7 +21,7 @@ namespace RiverRaid.Objects
         {
             Stage = stage;
 
-            _airplane = (Airplane)stage.DrawList.Find(x => x is Airplane);
+            _airplane = (Airplane)stage.EntityList.Find(x => x is Airplane);
 
             Position = new Vector2(_airplane.Position.X + 6, _airplane.Position.Y);
             BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),

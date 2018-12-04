@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-using RiverRaid.ObjectTypes;
-using RiverRaid.Objects;
 using RiverRaid.Objects.Tiles;
+using RiverRaid.ObjectTypes;
 
 using System;
 using System.Collections.Generic;
@@ -16,39 +13,43 @@ namespace RiverRaid.States
         private bool _isLoaded = false;
         private int _levelRowIndex = 99;
         private bool _gameFreezeFlag = true;
+        private int _levelFlag = 0;
+        private int _addNewTileRowFlag = 0;
 
-        public List<IEntity> DrawList { get; set; } = new List<IEntity>();
+        public List<IEntity> EntityList { get; set; } = new List<IEntity>();
         public List<IEntity> UpdateList { get; set; } = new List<IEntity>();
 
         private List<ITile> _listOfTiles = new List<ITile>();
         private List<ITile> _listOfTilesToDestroy = new List<ITile>();
-        private List<IEntity> _listOfIEButtons = new List<IEntity>();
         private List<Button> _listOfButtons = new List<Button>();
+
+        private GroundUncollidable _background;
 
         //LOAD OBJECTS AND OTHER STUFF IMPORTANT FOR THE GAMESTATE
         public void OnLoad()
         {
+            _background = new GroundUncollidable(this, Globals.background, new Vector2(0, 0));
+
+            EntityList.Add(new Airplane(this));
+
             LoadFirstRows();
 
-            DrawList.Add(new Airplane(this));
+            EntityList.Add(new Gui(this));
 
-            DrawList.Add(new Gui(this));
-            DrawList.Add(new Button(this, new Vector2(2, 198), Globals.buttonLeft, "buttonLeft"));
-            DrawList.Add(new Button(this, new Vector2(28, 198), Globals.buttonRight, "buttonRight"));
-            DrawList.Add(new Button(this, new Vector2(134, 198), Globals.buttonShoot, "buttonShoot"));
+            _listOfButtons.Add(new Button(this, new Vector2(2, 198), Globals.buttonLeft, "buttonLeft"));
+            _listOfButtons.Add(new Button(this, new Vector2(28, 198), Globals.buttonRight, "buttonRight"));
+            _listOfButtons.Add(new Button(this, new Vector2(134, 198), Globals.buttonShoot, "buttonShoot"));
 
-            _listOfIEButtons = DrawList.FindAll(x => x is Button);
-
-            foreach (Button button in _listOfIEButtons)
+            foreach (Button button in _listOfButtons)
             {
-                _listOfButtons.Add(button);
+                EntityList.Add(button);
             }
 
-            DrawList.Add(new FuelPointer(this));
-            DrawList.Add(new FuelBar(this));
+            EntityList.Add(new FuelPointer(this));
+            EntityList.Add(new FuelBar(this));
             
             //HACK: Do rozróżnienia?
-            UpdateList = DrawList;
+            UpdateList = EntityList;
         }
 
         public void LoadFirstRows()
@@ -119,7 +120,7 @@ namespace RiverRaid.States
 
             foreach (ITile tile in _listOfTiles)
             {
-                DrawList.Add(tile);
+                EntityList.Add(tile);
             }
         }
 
@@ -129,7 +130,37 @@ namespace RiverRaid.States
             int x = 0;
             int y = -8;
 
-            string[] currentRowDivided = Globals.levelStartRows[_levelRowIndex].Split((char)44);
+            string[] currentRowDivided = Globals.levelStartRows[_levelRowIndex].Split((char)44); ;
+
+            if (_levelRowIndex > 0)
+            {
+                switch (_levelFlag)
+                {
+                    case 0:
+                        currentRowDivided = Globals.levelStartRows[_levelRowIndex].Split((char)44);
+                        break;
+                    case 1:
+                        currentRowDivided = Globals.level1Rows[_levelRowIndex].Split((char)44);
+                        break;
+                    case 2:
+                        currentRowDivided = Globals.level2Rows[_levelRowIndex].Split((char)44);
+                        break;
+                    case 3:
+                        currentRowDivided = Globals.level3Rows[_levelRowIndex].Split((char)44);
+                        break;
+                    case 4:
+                        currentRowDivided = Globals.level4Rows[_levelRowIndex].Split((char)44);
+                        break;
+                }
+            }
+            else
+            {
+                _levelRowIndex = 99;
+
+                Random rnd = new Random();
+                _levelFlag = rnd.Next(1, 5);
+            }
+            
 
             for (int i = 0; i < 20; i++)
             {
@@ -186,7 +217,7 @@ namespace RiverRaid.States
 
             foreach (ITile tile in _listOfTiles)
             {
-                DrawList.Add(tile);
+                EntityList.Add(tile);
             }
         }
 
@@ -225,14 +256,26 @@ namespace RiverRaid.States
                 if (tile.ToDestroy)
                 {
                     _listOfTiles.Remove(tile);
-                    DrawList.Remove(tile);
+                    EntityList.Remove(tile);
                 }
             }
 
-            if (_listOfTilesToDestroy.Count > 0)
+            if (_listOfTilesToDestroy.Count != 0)
             {
-                //LoadNewTileLine();
                 _listOfTilesToDestroy.Clear();
+            }
+
+            if (Globals.tileVelocity != 0)
+            {
+                int fpsToNewTileRowLoad = (int)(8 / Globals.tileVelocity);
+                
+                if (_addNewTileRowFlag > fpsToNewTileRowLoad)
+                {
+                    _addNewTileRowFlag = 0;
+                    LoadNewTileLine();
+                }
+
+                _addNewTileRowFlag++;
             }
 
             foreach (IEntity entity in UpdateList)
@@ -248,11 +291,23 @@ namespace RiverRaid.States
         {
             Globals.spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, Globals.Scale);
             
-            foreach (IEntity entity in DrawList)
+            _background.Draw();
+
+            foreach (ITile tile in _listOfTiles)
             {
-                entity.Draw();            
+                tile.Draw();            
             }
-            
+
+            EntityList.Find(x => x is Airplane).Draw();
+            EntityList.Find(x => x is Gui).Draw();
+            EntityList.Find(x => x is FuelBar).Draw();
+            EntityList.Find(x => x is FuelPointer).Draw();
+
+            foreach (Button button in _listOfButtons)
+            {
+                button.Draw();
+            }
+
             Globals.spriteBatch.End();
         }
     }

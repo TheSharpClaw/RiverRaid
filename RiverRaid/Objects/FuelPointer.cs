@@ -5,7 +5,7 @@ using RiverRaid.ObjectTypes;
 
 using System.Collections.Generic;
 
-namespace RiverRaid.Objects
+namespace RiverRaid.ObjectTypes
 {
     class FuelPointer : IEntity
     {
@@ -22,8 +22,8 @@ namespace RiverRaid.Objects
 
         public FuelPointer(IComponent stage)
         {
-            _airplane = (Airplane)stage.DrawList.Find(x => x is Airplane);
-            _listOfFuels = stage.DrawList.FindAll(x => x is Fuel);
+            _airplane = (Airplane)stage.EntityList.Find(x => x is Airplane);
+            _listOfFuels = stage.EntityList.FindAll(x => x is Fuel);
             _positionFlag = 0;
             _refuelFlag = 0;
 

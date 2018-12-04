@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using RiverRaid.ObjectTypes;
-
 using System.Collections.Generic;
 
-namespace RiverRaid.Objects
+namespace RiverRaid.ObjectTypes
 {
     class Airplane : IEntity
     {
@@ -24,6 +22,7 @@ namespace RiverRaid.Objects
         public Texture2D Texture { get; set; } = Globals.airplane;
         public Rectangle BoundingBox { get; set; }
         public float Velocity { get; set; }
+        public bool CollisionFlag { get; set; } = false;
 
         public IComponent Stage { get; private set; }
 
@@ -44,7 +43,7 @@ namespace RiverRaid.Objects
         {
             _onLoadFlag = false;
 
-            _listOfIEButtons = Stage.DrawList.FindAll(x => x is Button);
+            _listOfIEButtons = Stage.EntityList.FindAll(x => x is Button);
 
             foreach (Button button in _listOfIEButtons)
             {
@@ -70,6 +69,18 @@ namespace RiverRaid.Objects
             if (_onLoadFlag)
             {
                 OnLoad();
+            }
+
+            if(CollisionFlag == true)
+            {
+                CollisionFlag = false;
+                Position = new Vector2(73, 173);
+                BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
+                    (int)(Texture.Width * Globals.scaleX), (int)(Texture.Height * Globals.scaleY));
+                Velocity = 0.5f;
+                _velocityFlag = 0;
+                _resetVelocityFlag = 0;
+                _moveButtonTouchedFlag = false;
             }
 
             _moveButtonTouchedFlag = false;

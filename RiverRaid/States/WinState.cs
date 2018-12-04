@@ -12,7 +12,7 @@ namespace RiverRaid.States
 
         }
 
-        public List<IEntity> DrawList { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<IEntity> EntityList { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public List<IEntity> UpdateList { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Draw()

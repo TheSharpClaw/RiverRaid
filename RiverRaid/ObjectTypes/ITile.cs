@@ -1,6 +1,4 @@
-﻿using RiverRaid.ObjectTypes;
-
-namespace RiverRaid.Objects.Tiles
+﻿namespace RiverRaid.ObjectTypes
 {
     interface ITile : IEntity
     {
