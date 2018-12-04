@@ -98,7 +98,7 @@ namespace RiverRaid.Objects
                 {
                     Texture = Globals.airplaneLeft;
 
-                    if (Velocity < 2 && _velocityFlag >= 5)
+                    if (Velocity < 2 && _velocityFlag >= 1)
                     {
                         Velocity = Velocity + 0.1f;
                         _velocityFlag = 0;
@@ -115,7 +115,7 @@ namespace RiverRaid.Objects
                     BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
                         (int)(Texture.Width * Globals.scaleX), (int)(Texture.Height * Globals.scaleY));
                 }
-                else if (_listOfButtons[1].IsTouched)
+                if (_listOfButtons[1].IsTouched)
                 {
                     Texture = Globals.airplaneRight;
 
@@ -136,7 +136,6 @@ namespace RiverRaid.Objects
                     BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
                         (int)(Texture.Width * Globals.scaleX), (int)(Texture.Height * Globals.scaleY));
                 }
-
                 if (_listOfButtons[2].IsTouched)
                 {
                     if(_listOfBullets.Count == 0)

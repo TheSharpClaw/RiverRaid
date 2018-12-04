@@ -39,7 +39,7 @@ namespace RiverRaid
             Globals.graphics.IsFullScreen = true;
             Globals.graphics.ApplyChanges();
 
-            Globals.screenResolution = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            Globals.screenResolution = new Vector2(Globals.graphics.GraphicsDevice.Viewport.Width, Globals.graphics.GraphicsDevice.Viewport.Height);
 
             Globals.scaleX = Globals.screenResolution.X / Globals.gameWindowSize.X;
             Globals.scaleY = Globals.screenResolution.Y / Globals.gameWindowSize.Y;

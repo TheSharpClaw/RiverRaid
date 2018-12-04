@@ -42,7 +42,10 @@ namespace RiverRaid.Objects
                 foreach(TouchLocation touchLocation in _touchCollection)
                 {
                     if (BoundingBox.Intersects(new Rectangle((int)touchLocation.Position.X, (int)touchLocation.Position.Y, 1, 1)))
+                    {
                         IsTouched = true;
+                        break;
+                    }
                     else
                     {
                         IsTouched = false;
