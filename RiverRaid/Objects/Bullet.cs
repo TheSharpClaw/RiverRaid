@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using RiverRaid.ObjectTypes;
+using System.Collections.Generic;
 
 namespace RiverRaid.ObjectTypes
 {
@@ -12,6 +13,8 @@ namespace RiverRaid.ObjectTypes
         public Rectangle BoundingBox { get; set; }
         
         private Airplane _airplane;
+
+        private List<IEntity> _listOfFuels = new List<IEntity>();
 
         public bool ToDestroy { get; set; } = false;
 
@@ -35,9 +38,20 @@ namespace RiverRaid.ObjectTypes
 
         public void Update()
         {
-            Position = new Vector2(_airplane.Position.X + 6, Position.Y - 5);
+            Position = new Vector2(_airplane.Position.X + 6, Position.Y - 4);
             BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
                 (int)(Texture.Width * Globals.scaleX), (int)(Texture.Height * Globals.scaleY));
+
+            _listOfFuels = Stage.EntityList.FindAll(x => x is Fuel);
+
+            foreach(Fuel fuel in _listOfFuels)
+            {
+                if (fuel.BoundingBox.Intersects(BoundingBox))
+                {
+                    fuel.ToDestroy = true;
+                    ToDestroy = true;
+                }
+            }
 
             if(Position.Y < 0 - Texture.Height)
             {

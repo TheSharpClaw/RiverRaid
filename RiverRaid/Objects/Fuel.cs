@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using RiverRaid.ObjectTypes;
-
 namespace RiverRaid.ObjectTypes
 {
     class Fuel : IEntity
@@ -10,6 +8,10 @@ namespace RiverRaid.ObjectTypes
         public Vector2 Position { get; set; }
         public Texture2D Texture { get; set; } = Globals.fuel;
         public Rectangle BoundingBox { get; set; }
+
+        Bullet Bullet { get; set; } = null;
+
+        public bool ToDestroy { get; set; }
 
         public IComponent Stage { get; private set; }
 
@@ -28,7 +30,13 @@ namespace RiverRaid.ObjectTypes
 
         public void Update()
         {
+            Position = new Vector2(Position.X, Position.Y + Globals.tileVelocity);
 
+            BoundingBox = new Rectangle((int)(Position.X * Globals.scaleX), (int)(Position.Y * Globals.scaleY),
+                (int)(Texture.Width * Globals.scaleX), (int)(Texture.Height * Globals.scaleY));
+            
+            if (Position.Y > 192)
+                ToDestroy = true;
         }
     }
 }

@@ -356,18 +356,15 @@
 /processorParam:TextureFormat=Color
 /build:textures/tiles/water.png
 
-#begin tileMap1.txt
-/copy:tileMap1.txt
+#begin tileMap1.csv
+/copy:tileMap1.csv
 
-#begin tileMap2.txt
-/copy:tileMap2.txt
+#begin tileMap2.csv
+/copy:tileMap2.csv
 
-#begin tileMap3.txt
-/copy:tileMap3.txt
+#begin tileMap3.csv
+/copy:tileMap3.csv
 
-#begin tileMap4.txt
-/copy:tileMap4.txt
-
-#begin tileMapStart.txt
-/copy:tileMapStart.txt
+#begin tileMapStart.csv
+/copy:tileMapStart.csv
 

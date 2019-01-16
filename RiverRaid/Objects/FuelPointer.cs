@@ -40,6 +40,8 @@ namespace RiverRaid.ObjectTypes
             _positionFlag++;
             _refuelFlag++;
 
+            _listOfFuels = Stage.EntityList.FindAll(x => x is Fuel);
+
             foreach (Fuel fuel in _listOfFuels)
             {
                 if (_airplane.BoundingBox.Intersects(fuel.BoundingBox) && _refuelFlag >= 5)

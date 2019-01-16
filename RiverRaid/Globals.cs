@@ -47,13 +47,11 @@ namespace RiverRaid
         public static string level1Path;
         public static string level2Path;
         public static string level3Path;
-        public static string level4Path;
 
         public static List<string> levelStartRows = new List<string>();
         public static List<string> level1Rows = new List<string>();
         public static List<string> level2Rows = new List<string>();
         public static List<string> level3Rows = new List<string>();
-        public static List<string> level4Rows = new List<string>();
         #endregion
 
         #region Songs

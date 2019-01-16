@@ -12,15 +12,22 @@ namespace RiverRaid.States
     {
         private bool _isLoaded = false;
         private int _levelRowIndex = 99;
+
         private bool _gameFreezeFlag = true;
         private int _levelFlag = 0;
         private int _addNewTileRowFlag = 0;
+        private int _newFuelSpawnFlag = 0;
 
         public List<IEntity> EntityList { get; set; } = new List<IEntity>();
         public List<IEntity> UpdateList { get; set; } = new List<IEntity>();
 
+        private List<ITile> _listOfNewTiles = new List<ITile>();
         private List<ITile> _listOfTiles = new List<ITile>();
         private List<ITile> _listOfTilesToDestroy = new List<ITile>();
+
+        private List<Fuel> _listOfFuels = new List<Fuel>();
+        private List<Fuel> _listOfFuelsToDestroy = new List<Fuel>();
+
         private List<Button> _listOfButtons = new List<Button>();
 
         private GroundUncollidable _background;
@@ -57,7 +64,7 @@ namespace RiverRaid.States
             int x = 0;
             int y = 184;
 
-            for (int i = 0; i < 24; i++)
+            for (int i = 0; i < 25; i++)
             {
                 string[] currentRowDivided = Globals.levelStartRows[_levelRowIndex].Split((char)44);
 
@@ -90,6 +97,7 @@ namespace RiverRaid.States
                             break;
                         case 7:
                             _listOfTiles.Add(new GroundUncollidable(this, Globals.water, new Vector2(x, y)));
+                            SpawnFuel(x, y);
                             break;
                         case 8:
                             _listOfTiles.Add(new EnlargmentBig(this, Globals.enlargementLeftBig, new Vector2(x, y)));
@@ -124,6 +132,24 @@ namespace RiverRaid.States
             }
         }
 
+        private void SpawnFuel(int x, int y)
+        {
+            Random rnd = new Random();
+            int number = rnd.Next(1, 50);
+
+            
+
+            if (number == 0 && _newFuelSpawnFlag >= 50 || _newFuelSpawnFlag >= 300) {
+                Fuel tmpFuel = new Fuel(this, new Vector2(x, y));
+                EntityList.Add(tmpFuel);
+                _listOfFuels.Add(tmpFuel);
+                _newFuelSpawnFlag = 0;
+            }
+            else
+            {
+                _newFuelSpawnFlag++;
+            }
+        }
 
         private void LoadNewTileLine()
         {
@@ -148,17 +174,14 @@ namespace RiverRaid.States
                     case 3:
                         currentRowDivided = Globals.level3Rows[_levelRowIndex].Split((char)44);
                         break;
-                    case 4:
-                        currentRowDivided = Globals.level4Rows[_levelRowIndex].Split((char)44);
-                        break;
                 }
             }
             else
             {
-                _levelRowIndex = 99;
+                _levelRowIndex = 100;
 
                 Random rnd = new Random();
-                _levelFlag = rnd.Next(1, 5);
+                _levelFlag = rnd.Next(1, 4);
             }
             
 
@@ -169,59 +192,63 @@ namespace RiverRaid.States
                 switch (currentTile)
                 {
                     case 0:
-                        _listOfTiles.Add(new EnlargmentSmall(this, Globals.enlargementRightSmall, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new EnlargmentSmall(this, Globals.enlargementRightSmall, new Vector2(x, y)));
                         break;
                     case 1:
-                        _listOfTiles.Add(new EnlargmentBig(this, Globals.enlargementRightBig, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new EnlargmentBig(this, Globals.enlargementRightBig, new Vector2(x, y)));
                         break;
                     case 2:
-                        _listOfTiles.Add(new GroundCollidable(this, Globals.roadUp, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new GroundCollidable(this, Globals.roadUp, new Vector2(x, y)));
                         break;
                     case 3:
-                        _listOfTiles.Add(new GroundUncollidable(this, Globals.ground, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new GroundUncollidable(this, Globals.ground, new Vector2(x, y)));
                         break;
                     case 4:
-                        _listOfTiles.Add(new NarrowingSmall(this, Globals.narrowingRightSmall, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new NarrowingSmall(this, Globals.narrowingRightSmall, new Vector2(x, y)));
                         break;
                     case 5:
-                        _listOfTiles.Add(new NarrowingBig(this, Globals.narrowingRightBig, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new NarrowingBig(this, Globals.narrowingRightBig, new Vector2(x, y)));
                         break;
                     case 6:
-                        _listOfTiles.Add(new GroundCollidable(this, Globals.roadMiddle, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new GroundCollidable(this, Globals.roadMiddle, new Vector2(x, y)));
                         break;
                     case 7:
-                        _listOfTiles.Add(new GroundUncollidable(this, Globals.water, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new GroundUncollidable(this, Globals.water, new Vector2(x, y)));
+                        SpawnFuel(x, y);
                         break;
                     case 8:
-                        _listOfTiles.Add(new EnlargmentBig(this, Globals.enlargementLeftBig, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new EnlargmentBig(this, Globals.enlargementLeftBig, new Vector2(x, y)));
                         break;
                     case 9:
-                        _listOfTiles.Add(new EnlargmentSmall(this, Globals.enlargementLeftSmall, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new EnlargmentSmall(this, Globals.enlargementLeftSmall, new Vector2(x, y)));
                         break;
                     case 10:
-                        _listOfTiles.Add(new GroundCollidable(this, Globals.roadDown, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new GroundCollidable(this, Globals.roadDown, new Vector2(x, y)));
                         break;
                     case 12:
-                        _listOfTiles.Add(new NarrowingBig(this, Globals.narrowingLeftBig, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new NarrowingBig(this, Globals.narrowingLeftBig, new Vector2(x, y)));
                         break;
                     case 13:
-                        _listOfTiles.Add(new NarrowingBig(this, Globals.narrowingLeftSmall, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new NarrowingBig(this, Globals.narrowingLeftSmall, new Vector2(x, y)));
                         break;
                     case 15:
-                        _listOfTiles.Add(new GroundCollidable(this, Globals.ground, new Vector2(x, y)));
+                        _listOfNewTiles.Add(new GroundCollidable(this, Globals.ground, new Vector2(x, y)));
                         break;
                 }
+
                 x = x + 8;
             }
             _levelRowIndex--;
 
-            foreach (ITile tile in _listOfTiles)
+            foreach (ITile tile in _listOfNewTiles)
             {
                 EntityList.Add(tile);
+                _listOfTiles.Add(tile);
             }
-        }
 
-        //OBLICZENIA
+            _listOfNewTiles.Clear();
+        }
+        
         public void Update()
         {
             if (!_isLoaded)
@@ -236,14 +263,29 @@ namespace RiverRaid.States
                 {
                     if (button.IsTouched)
                     {
-                        Globals.tileVelocity = 0.2f;
+                        Globals.tileVelocity = 0.8f;
                         Globals.fuelPointerSpeed = 1;
                         _gameFreezeFlag = false;
                     }
                 }
             }
 
-            foreach(ITile tile in _listOfTiles)
+            //SPAWNOWANIE NOWYCH KAFELEK
+            if (Globals.tileVelocity != 0)
+            {
+                int fpsToNewTileRowLoad = (int)(8 / Globals.tileVelocity) - 1;
+
+                if (_addNewTileRowFlag > fpsToNewTileRowLoad)
+                {
+                    _addNewTileRowFlag = 0;
+                    LoadNewTileLine();
+                }
+
+                _addNewTileRowFlag++;
+            }
+
+            //CZYSZCZENIE KAFELEK
+            foreach (ITile tile in _listOfTiles)
             {
                 if (tile.ToDestroy)
                 {
@@ -259,25 +301,36 @@ namespace RiverRaid.States
                     EntityList.Remove(tile);
                 }
             }
-
+            
             if (_listOfTilesToDestroy.Count != 0)
             {
                 _listOfTilesToDestroy.Clear();
             }
 
-            if (Globals.tileVelocity != 0)
+            //CZYSZCZENIE FUELÓW
+            foreach (Fuel fuel in _listOfFuels)
             {
-                int fpsToNewTileRowLoad = (int)(8 / Globals.tileVelocity);
-                
-                if (_addNewTileRowFlag > fpsToNewTileRowLoad)
+                if (fuel.ToDestroy)
                 {
-                    _addNewTileRowFlag = 0;
-                    LoadNewTileLine();
+                    _listOfFuelsToDestroy.Add(fuel);
                 }
-
-                _addNewTileRowFlag++;
             }
 
+            foreach (Fuel fuel in _listOfFuelsToDestroy)
+            {
+                if (fuel.ToDestroy)
+                {
+                    _listOfFuels.Remove(fuel);
+                    EntityList.Remove(fuel);
+                }
+            }
+
+            if (_listOfFuelsToDestroy.Count != 0)
+            {
+                _listOfFuelsToDestroy.Clear();
+            }
+
+            //UPDATE WSZYSTKIEGO
             foreach (IEntity entity in UpdateList)
             {
                 entity.Update();
@@ -289,13 +342,20 @@ namespace RiverRaid.States
         //RYSOWANIE NA EKRANIE
         public void Draw()
         {
+            Globals.graphics.GraphicsDevice.Clear(Color.Black);
+
             Globals.spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, Globals.Scale);
-            
+
             _background.Draw();
 
             foreach (ITile tile in _listOfTiles)
             {
                 tile.Draw();            
+            }
+
+            foreach (Fuel fuel in _listOfFuels)
+            {
+                fuel.Draw();
             }
 
             EntityList.Find(x => x is Airplane).Draw();

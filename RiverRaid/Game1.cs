@@ -89,17 +89,15 @@ namespace RiverRaid
             #endregion
 
             #region Level
-            Globals.levelStartPath = Path.Combine(Content.RootDirectory, "tileMapStart.txt");
-            Globals.level1Path = Path.Combine(Content.RootDirectory, "tileMap1.txt");
-            Globals.level2Path = Path.Combine(Content.RootDirectory, "tileMap2.txt");
-            Globals.level3Path = Path.Combine(Content.RootDirectory, "tileMap3.txt");
-            Globals.level4Path = Path.Combine(Content.RootDirectory, "tileMap4.txt");
+            Globals.levelStartPath = Path.Combine(Content.RootDirectory, "tileMapStart.csv");
+            Globals.level1Path = Path.Combine(Content.RootDirectory, "tileMap1.csv");
+            Globals.level2Path = Path.Combine(Content.RootDirectory, "tileMap2.csv");
+            Globals.level3Path = Path.Combine(Content.RootDirectory, "tileMap3.csv");
 
             Globals.levelStartRows = LoadLevel(Globals.levelStartPath);
             Globals.level1Rows = LoadLevel(Globals.level1Path);
             Globals.level2Rows = LoadLevel(Globals.level2Path);
             Globals.level3Rows = LoadLevel(Globals.level3Path);
-            Globals.level4Rows = LoadLevel(Globals.level4Path);
             #endregion
 
             #region Songs
@@ -174,7 +172,6 @@ namespace RiverRaid
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
             base.Draw(gameTime);
         }
     }
